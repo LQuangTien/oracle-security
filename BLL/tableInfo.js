@@ -1,18 +1,18 @@
 const {
-    getAllSysPrivs, getAllTabPrivs, getAllColPrivs, getAllRoles, getSysPrivsByRole,getTabPrivsByRole,getColPrivsByRole, getUsersByRole,
+    getAllSysPrivs, getAllTabPrivs, getAllColPrivs, getAllRoles, getSysPrivsByRole, getTabPrivsByRole, getColPrivsByRole, getUsersByRole,
     getProfiles, getResourcesByProfile, getUsersByProfile, getAllUserInfo, getUserInfoByUsername,
     getUserInfoByUser, getRolesByUser, getRolesByUsername, getColPrivsByUser, getColPrivsByUsername,
     getTabPrivsByUser, getTabPrivsByUsername, getSysPrivsByUser, getSysPrivsByUsername,
     getSysPrivsGrantedByRoleByUser, getSysPrivsGrantedByRoleByRolename, getTabPrivsGrantedByRoleByUser,
-    getTabPrivsGrantedByRoleByRolename, getColPrivsGrantedByRoleByRolename, getDefaultTablespace
-
+    getTabPrivsGrantedByRoleByRolename, getColPrivsGrantedByRoleByRolename, getDefaultTablespace,
+    getTemporaryTablespace
 } = require('../DAL/tableInfo');
 
 module.exports = {
     //TABLE PRIVILEGE
     //input: connection as SYSDBA
     //output: [{grantee:string,owner:string,table:string,column:string,grantor:string,
-//privilege:string,grantable:string},..]
+    //privilege:string,grantable:string},..]
     async getAllPrivileges(connectionAdmin) {
         const result = [];
 
@@ -43,7 +43,7 @@ module.exports = {
     },
 
     //TABLE ROLE
-//input: connection as SYSDBA
+    //input: connection as SYSDBA
     //output: [{ROLE_ID:int,ROLE:string},..]
     getAllRole(connectionAdmin) {
         return getAllRoles(connectionAdmin).then((data) => data.rows);
@@ -57,16 +57,16 @@ module.exports = {
     },
     //input: connection as SYSDBA, roleName:string
     //output: [{role:string,owner:string,table:string,column:string||null,grantor:string,
-//privilege:string,grantable:string},..]
+    //privilege:string,grantable:string},..]
     async getAllPrivsByRole(connectionAdmin, roleName) {
         const result = [];
 
         const [sysPrivs, tabPrivs, colPrivs] = await Promise.all([getSysPrivsByRole(connectionAdmin, roleName),
-getTabPrivsByRole(connectionAdmin, roleName),getColPrivsByRole(connectionAdmin, roleName)]);
+        getTabPrivsByRole(connectionAdmin, roleName), getColPrivsByRole(connectionAdmin, roleName)]);
 
         for (const row of sysPrivs.rows) {
             result.push({
-                role: row.GRANTEE, owner: null, table: null, column: null,grantor:null,
+                role: row.GRANTEE, owner: null, table: null, column: null, grantor: null,
                 privilege: row.PRIVILEGE, grantable: row.ADMIN_OPTION
             })
         }
@@ -74,17 +74,17 @@ getTabPrivsByRole(connectionAdmin, roleName),getColPrivsByRole(connectionAdmin, 
         for (const row of tabPrivs.rows) {
             result.push({
                 role: row.GRANTEE, owner: row.OWNER, table: row.TABLE_NAME,
-                column: null,grantor:row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
+                column: null, grantor: row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             })
         }
-//grantee,owner,table_name,column_name,grantor,privilege,grantable
-for (const row of colPrivs.rows) {
+        //grantee,owner,table_name,column_name,grantor,privilege,grantable
+        for (const row of colPrivs.rows) {
             result.push({
                 role: row.GRANTEE, owner: row.OWNER, table: row.TABLE_NAME,
-                column: row.COLUMN_NAME,grantor:row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
+                column: row.COLUMN_NAME, grantor: row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             })
         }
-return result;
+        return result;
     },
     //input: connection as SYSDBA, roleName:string
     //output: [{GRANTEE:string,GRANTED_ROLE:string,ADMIN_OPTION:string},..]
@@ -103,7 +103,7 @@ return result;
     },
 
     //TABLE PROFILE
- //input: connection as SYSDBA
+    //input: connection as SYSDBA
     //output: [{NAME:string},..]
     getAllProfiles(connectionAdmin) {
         return getProfiles(connectionAdmin).then((data) => data.rows);
@@ -115,7 +115,7 @@ return result;
         //     return result;
         // })
     },
-//input: connection as SYSDBA, profileName:string
+    //input: connection as SYSDBA, profileName:string
     //output: [{PROFILE:string,RESOURCE_NAME:string,LIMIT:string},..]
     getProfileInfo(connectionAdmin, profileName) {
         return getResourcesByProfile(connectionAdmin, profileName).then((data) => data.rows);
@@ -127,7 +127,7 @@ return result;
         //     return result;
         // })
     },
-//input: connection as SYSDBA, profileName:string
+    //input: connection as SYSDBA, profileName:string
     //output: [{USERNAME:string},..]
     getAllUsersByProfile(connectionAdmin, profileName) {
         return getUsersByProfile(connectionAdmin, profileName).then((data) => data.rows);
@@ -141,26 +141,26 @@ return result;
     },
 
     //TABLE USER INFO KHI ĐĂNG NHẬP BẰNG ADMIN
-//input: connection as SYSDBA
+    //input: connection as SYSDBA
     //output: [{USERNAME:string,ACCOUNT_STATUS:string,LOCK_DATE:string||null,
-//CREATED:string,DEFAULT_TABLESPACE:string,QUOTAS:string,TEMPORARY_TABLESPACE:string,
-//PROFILE:string},..]
+    //CREATED:string,DEFAULT_TABLESPACE:string,QUOTAS:string,TEMPORARY_TABLESPACE:string,
+    //PROFILE:string},..]
     getAllUser(connectionAdmin) {
         return getAllUserInfo(connectionAdmin).then((data) => data.rows);
     },
-//input: connection as SYSDBA, username:string
-//output:giong ben tren
+    //input: connection as SYSDBA, username:string
+    //output:giong ben tren
     getUserByUsername(connectionAdmin, username) {
         return getUserInfoByUsername(connectionAdmin, username).then((data) => data.rows);
     },
-//input: connection as SYSDBA, username:string
+    //input: connection as SYSDBA, username:string
     //output: [{GRANTEE:STRING,GRANTED_ROLE:STRING,ADMIN_OPTION:STRING},..]
     getAllRolesByUsername(connectionAdmin, username) {
         return getRolesByUsername(connectionAdmin, username).then((data) => data.rows);
     },
-//input: connection as SYSDBA, username:string
+    //input: connection as SYSDBA, username:string
     //output: [{grantee:string,owner:string||null,table:string||null,column:string||null,
-//privilege:string,grantable:string},..]
+    //privilege:string,grantable:string},..]
     async getAllPrivsByUsername(connectionAdmin, username) {
         const result = [];
         const [colPrivs, tabPrivs, sysPrivs] = await Promise.all([getColPrivsByUsername(connectionAdmin, username),
@@ -191,7 +191,7 @@ return result;
         }
         return result;
     },
-//TRUNG ROIIIIIIIIIIIIIIIIIIIIIIII, BEN TREN ROLE CO NAY ROI
+    //TRUNG ROIIIIIIIIIIIIIIIIIIIIIIII, BEN TREN ROLE CO NAY ROI
     async getAllPrivsByRoleName(connectionAdmin, roleName) {
         const result = [];
         const [sysPrivs, tabPrivs, colPrivs] =
@@ -227,45 +227,45 @@ return result;
 
 
     //TABLE USER INFO CỦA USER ĐANG CONNECT
-//input: connection as USER
+    //input: connection as USER
     //output:
-//{
-//userInfo:{
-USERNAME:STRING,ACCOUNT_STATUS:sTRING,LOCK_DATE:STRING||NULL,
-//CREATED:STRING,DEFAULT_TABLESPACE:STRING,QUOTAS:STRING,TEMPORARY_TABLESPACE:STRING
-//},
-//roles:[{GRANTED_ROLE:STRING,ADMIN_OPTION:STRING},..],
-//privs:[{role:null,owner:string,table:string,column:null,grantor:string,privilege:string,
-//grantable:string},..],
-//privsGrantedByRole:[{role:string,owner:null,table:null,column:null,grantor:null,
-//privilege:string,grantable:string}]
-//}
+    //{
+    //userInfo:{
+    //USERNAME:STRING,ACCOUNT_STATUS:sTRING,LOCK_DATE:STRING||NULL,
+    //CREATED:STRING,DEFAULT_TABLESPACE:STRING,QUOTAS:STRING,TEMPORARY_TABLESPACE:STRING
+    //},
+    //roles:[{GRANTED_ROLE:STRING,ADMIN_OPTION:STRING},..],
+    //privs:[{role:null,owner:string,table:string,column:null,grantor:string,privilege:string,
+    //grantable:string},..],
+    //privsGrantedByRole:[{role:string,owner:null,table:null,column:null,grantor:null,
+    //privilege:string,grantable:string}]
+    //}
     async getUserInfoByUserConnection(connection) {
         const user = {};
         const [userinfo, allRoles, colPrivs, tabPrivs, sysPrivs, sysPrivsByRole, objectPrivsByRole] =
-            await Promise.all([ getUserInfoByUser(connection), getRolesByUser(connection),
+            await Promise.all([getUserInfoByUser(connection), getRolesByUser(connection),
             getColPrivsByUser(connection), getTabPrivsByUser(connection),
             getSysPrivsByUser(connection), getSysPrivsGrantedByRoleByUser(connection),
             getTabPrivsGrantedByRoleByUser(connection)]);
- 
-user.userInfo = userinfo.rows[0];
+
+        user.userInfo = userinfo.rows[0];
         user.roles = allRoles.rows;
- user.privs = [];
+        user.privs = [];
         for (const row of colPrivs.rows) {
             user.privs.push({
-                role:null,owner: row.OWNER, table: row.TABLE_NAME, column: row.COLUMN_NAME,
+                role: null, owner: row.OWNER, table: row.TABLE_NAME, column: row.COLUMN_NAME,
                 grantor: row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             });
         }
         for (const row of tabPrivs.rows) {
             user.privs.push({
-                role:null,owner: row.OWNER, table: row.TABLE_NAME, column: null,
+                role: null, owner: row.OWNER, table: row.TABLE_NAME, column: null,
                 grantor: row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             });
         }
         for (const row of sysPrivs.rows) {
             user.privs.push({
-                role:null,owner: null, table: null, column: null,
+                role: null, owner: null, table: null, column: null,
                 grantor: null, privilege: row.PRIVILEGE, grantable: row.ADMIN_OPTION
             });
         }
@@ -285,6 +285,14 @@ user.userInfo = userinfo.rows[0];
         }
         return user;
     },
-
-
+    //input: connection as SYSDBA
+    //output: [{TABLESPACE_NAME:string}]
+    getDefaultTableSpaces(connectionAdmin) {
+        return getDefaultTablespace(connectionAdmin).then((data) => data.rows);
+    },
+    //input: connection as SYSDBA
+    //output: [{TABLESPACE_NAME:string}]
+    getDefaultTableSpaces(connectionAdmin) {
+        return getTemporaryTablespace(connectionAdmin).then((data) => data.rows);
+    }
 }

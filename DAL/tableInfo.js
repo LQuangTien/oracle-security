@@ -239,18 +239,18 @@ const getColPrivsGrantedByRoleByRolename = (connectionAdmin, rolename) => {
 }
 
 const getDefaultTablespace = (connectionAdmin) => {
-    const getDefaultTablespaceQuery = "select * from dba_tablespaces where contentS='TEMPORARY'";
+    const getDefaultTablespaceQuery = "select TABLESPACE_NAME from dba_tablespaces where contentS='TEMPORARY'";
 
     return initializeQuery(connectionAdmin, getDefaultTablespaceQuery);
 }
 
 const getTemporaryTablespace = (connectionAdmin) => {
-    const getTemporaryTablespaceQuery = "select * from dba_tablespaces where contentS='PERMANENT' AND FORCE_LOGGING='NO'";
+    const getTemporaryTablespaceQuery = "select TABLESPACE_NAME from dba_tablespaces where contentS='PERMANENT' AND FORCE_LOGGING='NO'";
 
     return initializeQuery(connectionAdmin, getTemporaryTablespaceQuery);
 }
 
-
+/*
 (async function exec() {
     try {
         const profile = { name: 'DEFAULT' }
@@ -396,6 +396,7 @@ const getTemporaryTablespace = (connectionAdmin) => {
         console.log(err.message);
     }
 })();
+*/
 
 module.exports = {
     getAllSysPrivs, getAllTabPrivs, getAllColPrivs, getAllRoles, getSysPrivsByRole,getTabPrivsByRole,getColPrivsByRole, getUsersByRole,
@@ -403,5 +404,5 @@ module.exports = {
     getUserInfoByUser, getRolesByUser, getRolesByUsername, getColPrivsByUser, getColPrivsByUsername,
     getTabPrivsByUser, getTabPrivsByUsername, getSysPrivsByUser, getSysPrivsByUsername,
     getSysPrivsGrantedByRoleByUser, getSysPrivsGrantedByRoleByRolename, getTabPrivsGrantedByRoleByUser,
-    getTabPrivsGrantedByRoleByRolename, getColPrivsGrantedByRoleByRolename, getDefaultTablespace
+    getTabPrivsGrantedByRoleByRolename, getColPrivsGrantedByRoleByRolename, getDefaultTablespace,getTemporaryTablespace
 }
