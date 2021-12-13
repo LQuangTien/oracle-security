@@ -10,8 +10,8 @@ function checkProfileInfo(profile) {
     const profileDefaultValue = 'DEFAULT';
     const profileUnlimitValue = 'UNLIMITED';
 
-if(isNaN(profile.name)===false) return PROFILE_NAME_INVALID;
-const { name,...other} = profile;
+    if (isNaN(profile.name) === false) return PROFILE_NAME_INVALID;
+    const { name, ...other } = profile;
 
     for (const field in other) {
 
@@ -22,25 +22,25 @@ const { name,...other} = profile;
 }
 
 module.exports = {
-//phai co it nhat 1 trong 3 thang session,connect,idle
-//input:{name:string,session:int[,connect:int,idle:int]}
-//output:{ rowsAffected: 0 }
+    //phai co it nhat 1 trong 3 thang session,connect,idle
+    //input:{name:string,session:int[,connect:int,idle:int]}
+    //output:{ rowsAffected: 0 }
     create(connection, profile) {
         const isValid = checkProfileInfo(profile);
 
         if (isValid === 1) return createProfile(connection, profile);
         return isValid;
     },
-//phai co it nhat 1 trong 3 thang session,connect,idle
-//input:{name:string,session:int[,connect:int,idle:int]}
-//output:{ rowsAffected: 0 }
+    //phai co it nhat 1 trong 3 thang session,connect,idle
+    //input:{name:string,session:int[,connect:int,idle:int]}
+    //output:{ rowsAffected: 0 }
     alter(connection, profile) {
         const isValid = checkProfileInfo(profile);
         if (isValid === 1) return alterProfile(connection, profile);
         return isValid;
     },
-//input:profileName:string
-//output:{ rowsAffected: 0 }
+    //input:profileName:string
+    //output:{ rowsAffected: 0 }
     drop(connection, profileName) {
         return dropProfile(connection, profileName);
     },

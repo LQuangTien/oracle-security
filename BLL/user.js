@@ -8,36 +8,35 @@ function checkUserInfo(user) {
     const stateLock = 'LOCK';
     const stateUnlock = 'UNLOCK';
 
-if(user.state!==undefined){
-    if (!(user.state.trim().toUpperCase() === stateLock || user.state.trim().toUpperCase() === stateUnlock)) return STATUS_INVALID;
- }
-   //if (user.quota.isNaN()) return QUOTA_INVALID;
+    if (user.state !== undefined) {
+        if (!(user.state.trim().toUpperCase() === stateLock || user.state.trim().toUpperCase() === stateUnlock)) return STATUS_INVALID;
+    }
+    //if (user.quota.isNaN()) return QUOTA_INVALID;
     return VALID;
 }
 
 module.exports = {
-//input: {name:"user69",password:123[,defaultTablespace:"USERS",quota:'5M',
-//tempTablespace:'TEMP',profile:'pro69',state:unlock] }
-//output:{ rowsAffected: 0 }
+    //input: {name:"user69",password:123[,defaultTablespace:"USERS",quota:'5M',
+    //tempTablespace:'TEMP',profile:'pro69',state:'LOCK||UNLOCK'] }
+    //output:{ rowsAffected: 0 }
     create(connection, user) {
         const isValid = checkUserInfo(user);
         if (isValid === 1) return createUser(connection, user);
-return isValid;
-     
+        return isValid;
+
     },
-//input: {name:"user69",password:123[,defaultTablespace:"USERS",quota:'5M',
-//tempTablespace:'TEMP',profile:'pro69',state:unlock] }
-//output:{ rowsAffected: 0 }
+    //input: {name:"user69",password:123[,defaultTablespace:"USERS",quota:'5M',
+    //tempTablespace:'TEMP',profile:'pro69',state:'LOCK||UNLOCK'] }
+    //output:{ rowsAffected: 0 }
     alter(connection, user) {
         const isValid = checkUserInfo(user);
         if (isValid === 1) return alterUser(connection, user);
         return isValid;
     },
-//input:userName:String
-//output:{ rowsAffected: 0 }
+    //input:userName:String
+    //output:{ rowsAffected: 0 }
     drop(connection, userName) {
         return dropUser(connection, userName);
     },
 }
 
-    
