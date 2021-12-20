@@ -1,4 +1,5 @@
-const { createUser, alterUser, dropUser } = require("../DAL/user");
+const bcrypt = require("bcrypt");
+const { createUser, alterUser, dropUser } = require('../DAL/user');
 
 const VALID = 1;
 //const QUOTA_INVALID = 'QUOTA is not a number';

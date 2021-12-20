@@ -301,6 +301,12 @@ const getColPrivsGrantedByRoleByRolename = (connectionAdmin, rolename) => {
   );
 };
 
+const getTables = (connection) => {
+  const getTablesQuery = "SELECT table_name FROM user_tables";
+
+  return initializeQuery(connection, getTablesQuery);
+};
+
 const getDefaultTablespace = (connectionAdmin) => {
   const getDefaultTablespaceQuery =
     "select TABLESPACE_NAME from dba_tablespaces where contentS='TEMPORARY'";
@@ -493,4 +499,5 @@ module.exports = {
   getColPrivsGrantedByRoleByRolename,
   getDefaultTablespace,
   getTemporaryTablespace,
+  getTables,
 };

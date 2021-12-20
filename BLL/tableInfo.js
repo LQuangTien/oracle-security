@@ -5,7 +5,7 @@ const {
     getTabPrivsByUser, getTabPrivsByUsername, getSysPrivsByUser, getSysPrivsByUsername,
     getSysPrivsGrantedByRoleByUser, getSysPrivsGrantedByRoleByRolename, getTabPrivsGrantedByRoleByUser,
     getTabPrivsGrantedByRoleByRolename, getColPrivsGrantedByRoleByRolename, getDefaultTablespace,
-    getTemporaryTablespace
+    getTemporaryTablespace, getTables
 } = require('../DAL/tableInfo');
 
 module.exports = {
@@ -242,48 +242,58 @@ module.exports = {
     //}
     async getUserInfoByUserConnection(connection) {
         const user = {};
-        const [userinfo, allRoles, colPrivs, tabPrivs, sysPrivs, sysPrivsByRole, objectPrivsByRole] =
+        const [userinfo, allRoles, allPrivs] =
             await Promise.all([getUserInfoByUser(connection), getRolesByUser(connection),
+            getAllPrivsByUserConnection(connection)]);
+
+        user.userInfo = userinfo.rows[0];
+        user.roles = allRoles.rows;
+
+        user.privs = allPrivs.privs;
+        user.privsGrantedByRole = allPrivs.privsGrantedByRole;
+
+        return user;
+    },
+    async getAllPrivsByUserConnection(connection) {
+        const [colPrivs, tabPrivs, sysPrivs, sysPrivsByRole, objectPrivsByRole] = await Promise.all([
             getColPrivsByUser(connection), getTabPrivsByUser(connection),
             getSysPrivsByUser(connection), getSysPrivsGrantedByRoleByUser(connection),
             getTabPrivsGrantedByRoleByUser(connection)]);
 
-        user.userInfo = userinfo.rows[0];
-        user.roles = allRoles.rows;
-        user.privs = [];
+        const privs = [];
         for (const row of colPrivs.rows) {
-            user.privs.push({
+            privs.push({
                 role: null, owner: row.OWNER, table: row.TABLE_NAME, column: row.COLUMN_NAME,
                 grantor: row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             });
         }
         for (const row of tabPrivs.rows) {
-            user.privs.push({
+            privs.push({
                 role: null, owner: row.OWNER, table: row.TABLE_NAME, column: null,
                 grantor: row.GRANTOR, privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             });
         }
         for (const row of sysPrivs.rows) {
-            user.privs.push({
+            privs.push({
                 role: null, owner: null, table: null, column: null,
                 grantor: null, privilege: row.PRIVILEGE, grantable: row.ADMIN_OPTION
             });
         }
 
-        user.privsGrantedByRole = [];
+        const privsGrantedByRole = [];
         for (const row of sysPrivsByRole.rows) {
-            user.privsGrantedByRole.push({
+            privsGrantedByRole.push({
                 role: row.ROLE, owner: null, table: null, column: null,
                 grantor: null, privilege: row.PRIVILEGE, grantable: row.ADMIN_OPTION
             });
         }
         for (const row of objectPrivsByRole.rows) {
-            user.privsGrantedByRole.push({
+            privsGrantedByRole.push({
                 role: row.ROLE, owner: row.OWNER, table: row.TABLE_NAME, column: row.COLUMN_NAME,
                 privilege: row.PRIVILEGE, grantable: row.GRANTABLE
             });
         }
-        return user;
+        return { privs, privsGrantedByRole };
     },
     //input: connection as SYSDBA
     //output: [{TABLESPACE_NAME:string}]
@@ -292,7 +302,12 @@ module.exports = {
     },
     //input: connection as SYSDBA
     //output: [{TABLESPACE_NAME:string}]
-    getDefaultTableSpaces(connectionAdmin) {
+    getTemporaryTableSpaces(connectionAdmin) {
         return getTemporaryTablespace(connectionAdmin).then((data) => data.rows);
+    },
+    //input: connection as User
+    //output: [{TABLE_NAME:string}]
+    getAllTables(connectionAdmin) {
+        return getTables(connectionAdmin).then((data) => data.rows);
     }
 }
