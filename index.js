@@ -2,7 +2,7 @@ const cors = require("cors");
 const env = require("dotenv");
 const express = require("express");
 const bodyParser = require("body-parser");
-const routes = require('./routes')
+const routes = require("./routes");
 
 const app = express();
 
@@ -12,10 +12,10 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-routes.forEach(route => {
+routes.forEach((route) => {
   app.use("/api", route);
-})
+});
 
-app.listen(3000, () => {
-  console.log("Server is running on port:", 3000);
+app.listen(5000, () => {
+  console.log("Server is running on port:", 5000);
 });

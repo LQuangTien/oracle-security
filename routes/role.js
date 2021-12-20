@@ -8,8 +8,10 @@ const router = express.Router();
 
 router.post("/role/create", createRole);
 router.delete("/role/:roleName", dropRole);
-router.post("/role/:roleName", alterRole);
+router.put("/role/", alterRole);
 router.post("/role/grantRolesOrSysPrivs", grantRolesOrSysPrivsController);
 router.post("/role/grantTabOrColPrivs", grantTabOrColPrivsController);
 router.post("/role/revokeRolesOrSysPrivs", revokeRolesOrSysPrivsController);
 router.post("/role/revokeTabOrColPrivs", revokeTabOrColPrivsController);
+
+module.exports = router;

@@ -1,33 +1,37 @@
-const { dbConfig, createConnection, initializeQuery } = require('./db');
+const { dbConfig, createConnection, initializeQuery } = require("./db");
 
 const createProfile = (connection, profile) => {
-let createProfileQuery = ' CREATE PROFILE ' + profile.name + ' LIMIT ' ;
-if(profile.session) createProfileQuery+=createProfileQuery ;
-if(profile.connect)  createProfileQuery+=' CONNECT_TIME ' + profile.connect;
-if(profile.idle)  createProfileQuery+=' IDLE_TIME ' + profile.idle;
-/*
+  let createProfileQuery = " CREATE PROFILE " + profile.profile + " LIMIT ";
+  if (profile.sessionsPerUser)
+    createProfileQuery += " SESSIONS_PER_USER " + profile.sessionsPerUser;
+  if (profile.connectTime)
+    createProfileQuery += " CONNECT_TIME " + profile.connectTime;
+  if (profile.idleTime) createProfileQuery += " IDLE_TIME " + profile.idleTime;
+  /*
     const createProfileQuery = ' CREATE PROFILE ' + profile.name + ' LIMIT ' +
         ' SESSIONS_PER_USER ' + profile.session +
         ' CONNECT_TIME ' + profile.connect +
         ' IDLE_TIME ' + profile.idle;
 */
-    return initializeQuery(connection, createProfileQuery);
-}
+  return initializeQuery(connection, createProfileQuery);
+};
 
 const alterProfile = (connection, profile) => {
-let alterProfileQuery = ' ALTER PROFILE ' + profile.name + ' LIMIT ' ;
-if(profile.session) alterProfileQuery +=createProfileQuery ;
-if(profile.connect)  alterProfileQuery +=' CONNECT_TIME ' + profile.connect;
-if(profile.idle)  alterProfileQuery +=' IDLE_TIME ' + profile.idle;
+  let alterProfileQuery = " ALTER PROFILE " + profile.profile + " LIMIT ";
+  if (profile.sessionsPerUser)
+    alterProfileQuery += " SESSIONS_PER_USER " + profile.sessionsPerUser;
+  if (profile.connectTime)
+    alterProfileQuery += " CONNECT_TIME " + profile.connectTime;
+  if (profile.idleTime) alterProfileQuery += " IDLE_TIME " + profile.idleTime;
 
-    return initializeQuery(connection, alterProfileQuery);
-}
+  return initializeQuery(connection, alterProfileQuery);
+};
 
 const dropProfile = (connection, profileName) => {
-    const dropProfileQuery = 'DROP PROFILE ' + profileName + ' CASCADE';
+  const dropProfileQuery = "DROP PROFILE " + profileName + " CASCADE";
 
-    return initializeQuery(connection, dropProfileQuery);
-}
+  return initializeQuery(connection, dropProfileQuery);
+};
 
 /*
 (async function test() {

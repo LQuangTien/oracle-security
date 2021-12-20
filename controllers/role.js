@@ -18,7 +18,7 @@ exports.createRole = async (req, res) => {
         //này user nào có quyền thì cx dùng dc hết
         const config = dbConfig("sys", "123", true);
         const connection = await createConnection(config);
-        const result = await create(connection, req.role);
+        const result = await create(connection, req.body);
         await connection.close();
 
         return Get(res, result);
@@ -29,10 +29,9 @@ exports.createRole = async (req, res) => {
 
 exports.alterRole = async (req, res) => {
     try {
-        req.role.name = req.params.roleName;
         const config = dbConfig("sys", "123", true);
         const connection = await createConnection(config);
-        const result = await alter(connection, req.role);
+        const result = await alter(connection, req.body);
         await connection.close();
 
         return Update(res, result);

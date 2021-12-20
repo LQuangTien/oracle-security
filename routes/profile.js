@@ -7,4 +7,6 @@ const router = express.Router();
 
 router.post("/profile/create", createProfile);
 router.delete("/profile/:profileName", dropProfile);
-router.post("/profile/:profileName", alterProfile);
+router.put("/profile/", alterProfile);
+
+module.exports = router;

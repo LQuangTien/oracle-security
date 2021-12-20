@@ -13,7 +13,7 @@ router.get("/tableInfo/getAllPrivileges", getAllPrivilegesController);
 
 router.get("/tableInfo/getAllRole", getAllRoleController);
 router.get("/tableInfo/getAllPrivsByRole/:roleName", getAllPrivsByRoleController);
-router.get("/tableInfo/getAllPrivsByRole/:roleName", getAllUsersByRoleController);
+router.get("/tableInfo/getAllUsersByRole/:roleName", getAllUsersByRoleController);
 
 router.get("/tableInfo/getAllProfiles", getAllProfilesController);
 router.get("/tableInfo/getProfileInfo/:profileName", getProfileInfoController);
@@ -26,5 +26,5 @@ router.get("/tableInfo/getAllPrivsByUsername/:username", getAllPrivsByUsernameCo
 
 router.get("/tableInfo/getUserInfoByUserConnection", getUserInfoByUserConnectionController);
 
-
+module.exports = router;
 

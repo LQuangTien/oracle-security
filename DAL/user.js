@@ -1,52 +1,64 @@
-const { dbConfig, createConnection, initializeQuery } = require('./db');
+const { dbConfig, createConnection, initializeQuery } = require("./db");
 
 const createUser = (connection, user) => {
-let createUserQuery = ' CREATE USER ' + user.name + ' IDENTIFIED BY ' + user.password;
-if(user.defaultTablespace) {
- createUserQuery+=' DEFAULT TABLESPACE ' + user.defaultTablespace + ' QUOTA ' + user.quota + ' ON ' +
- user.defaultTablespace;
-}
-if(user.tempTablespace) {
-createUserQuery+=' TEMPORARY TABLESPACE ' +user.tempTablespace;
-}
-if(user.profile) {
-createUserQuery+= ' PROFILE ' + user.profile;
-}
-if(user.state) {
-createUserQuery+=' ACCOUNT ' + user.state;
-}
-/*
+  let createUserQuery =
+    " CREATE USER " + user.name + " IDENTIFIED BY " + user.password;
+  if (user.defaultTablespace) {
+    createUserQuery +=
+      " DEFAULT TABLESPACE " +
+      user.defaultTablespace +
+      " QUOTA " +
+      user.quota +
+      " ON " +
+      user.defaultTablespace;
+  }
+  if (user.tempTablespace) {
+    createUserQuery += " TEMPORARY TABLESPACE " + user.tempTablespace;
+  }
+  if (user.profile) {
+    createUserQuery += " PROFILE " + user.profile;
+  }
+  if (user.state) {
+    createUserQuery += " ACCOUNT " + user.state;
+  }
+  /*
     const createUserQuery = ' CREATE USER ' + user.name + ' IDENTIFIED BY ' + user.password +
         ' DEFAULT TABLESPACE ' + user.defaultTablespace + ' QUOTA ' + user.quota + ' ON ' +
  user.defaultTablespace + ' TEMPORARY TABLESPACE ' +user.tempTablespace+
         ' PROFILE ' + user.profile + ' ACCOUNT ' + user.state;
 */
-    return initializeQuery(connection, createUserQuery);
-}
+  return initializeQuery(connection, createUserQuery);
+};
 
 const alterUser = (connection, user) => {
-let alterUserQuery = ' ALTER USER ' + user.name + ' IDENTIFIED BY ' + user.password;
-if(user.defaultTablespace) {
- alterUserQuery +=' DEFAULT TABLESPACE ' + user.defaultTablespace + ' QUOTA ' + user.quota + ' ON ' +
- user.defaultTablespace;
-}
-if(user.tempTablespace) {
-alterUserQuery +=' TEMPORARY TABLESPACE ' +user.tempTablespace;
-}
-if(user.profile) {
-alterUserQuery += ' PROFILE ' + user.profile;
-}
-if(user.state) {
-alterUserQuery +=' ACCOUNT ' + user.state;
-}
-    return initializeQuery(connection, alterUserQuery);
-}
+  let alterUserQuery =
+    " ALTER USER " + user.name + " IDENTIFIED BY " + user.password;
+  if (user.defaultTablespace) {
+    alterUserQuery +=
+      " DEFAULT TABLESPACE " +
+      user.defaultTablespace +
+      " QUOTA " +
+      user.quota +
+      " ON " +
+      user.defaultTablespace;
+  }
+  if (user.tempTablespace) {
+    alterUserQuery += " TEMPORARY TABLESPACE " + user.tempTablespace;
+  }
+  if (user.profile) {
+    alterUserQuery += " PROFILE " + user.profile;
+  }
+  if (user.state) {
+    alterUserQuery += " ACCOUNT " + user.state;
+  }
+  return initializeQuery(connection, alterUserQuery);
+};
 
 const dropUser = (connection, userName) => {
-    const dropUserQuery = 'DROP USER ' + userName + ' CASCADE';
+  const dropUserQuery = "DROP USER " + userName + " CASCADE";
 
-    return initializeQuery(connection, dropUserQuery);
-}
+  return initializeQuery(connection, dropUserQuery);
+};
 
 /*
 (async function test() {
@@ -66,4 +78,4 @@ const dropUser = (connection, userName) => {
     }
 })();
 */
-module.exports = { createUser, alterUser, dropUser }
+module.exports = { createUser, alterUser, dropUser };
