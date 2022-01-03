@@ -34,7 +34,7 @@ exports.alterProfile = async (req, res) => {
     const result = await alter(connection, req.body);
     await connection.close();
 
-    return Update(res, result);
+    return Update(res, {result});
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -47,7 +47,7 @@ exports.dropProfile = async (req, res) => {
     const result = await drop(connection, req.params.profileName);
     await connection.close();
 
-    return Delete(res, result);
+    return Delete(res, {result});
   } catch (error) {
     return ServerError(res, error.message);
   }

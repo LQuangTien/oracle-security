@@ -21,7 +21,7 @@ exports.createRole = async (req, res) => {
         const result = await create(connection, req.body);
         await connection.close();
 
-        return Get(res, result);
+        return Get(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
@@ -34,7 +34,7 @@ exports.alterRole = async (req, res) => {
         const result = await alter(connection, req.body);
         await connection.close();
 
-        return Update(res, result);
+        return Update(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
@@ -47,7 +47,7 @@ exports.dropRole = async (req, res) => {
         const result = await drop(connection, req.params.roleName);
         await connection.close();
 
-        return Delete(res, result);
+        return Delete(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
@@ -60,7 +60,7 @@ exports.grantRolesOrSysPrivsController = async (req, res) => {
         const result = await grantRolesOrSysPrivs(connection, req.body.grantInfo);
         await connection.close();
 
-        return Get(res, result);
+        return Get(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
@@ -73,7 +73,7 @@ exports.grantTabOrColPrivsController = async (req, res) => {
         const result = await grantTabOrColPrivs(connection, req.grantInfo);
         await connection.close();
 
-        return Get(res, result);
+        return Get(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
@@ -86,7 +86,7 @@ exports.revokeRolesOrSysPrivsController = async (req, res) => {
         const result = await revokeRolesOrSysPrivs(connection, req.revokeInfo);
         await connection.close();
 
-        return Get(res, result);
+        return Get(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
@@ -99,7 +99,7 @@ exports.revokeTabOrColPrivsController = async (req, res) => {
         const result = await revokeTabOrColPrivs(connection, req.revokeInfo);
         await connection.close();
 
-        return Get(res, result);
+        return Get(res, {result});
     } catch (error) {
         return ServerError(res, error.message);
     }
