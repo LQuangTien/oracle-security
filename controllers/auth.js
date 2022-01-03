@@ -2,8 +2,19 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const md5 = require("md5");
 
-const { dbConfig, createConnection, openPluggableDB, checkIsAdmin } = require("../DAL/db");
-const { ServerError, Response, BadRequest, Get, Unauthorized } = require("../ulti/response");
+const {
+  dbConfig,
+  createConnection,
+  openPluggableDB,
+  checkIsAdmin,
+} = require("../DAL/db");
+const {
+  ServerError,
+  Response,
+  BadRequest,
+  Get,
+  Unauthorized,
+} = require("../ulti/response");
 
 const ONE_SECCOND = 1000;
 const ONE_MiNUTE = ONE_SECCOND * 60;
@@ -19,12 +30,11 @@ exports.signin = async (req, res) => {
 
     const connection = await createConnection(config);
 
-
     //them gium dau "cham than" cho 2 thang nay t bi liet phim 1 2 roi
     //Này là ktra coi nó k phải admin mà đăng nhập isAdmin là true thì kí vào đầu nó đmm
-    if (checkIsAdmin(connection) && req.body.isAdmin) return Unauthorized(res);
+    if (!checkIsAdmin(connection) && req.body.isAdmin) return Unauthorized(res);
 
-    if (checkIsAdmin(connection)) req.body.isAdmin = true;
+    if (!checkIsAdmin(connection)) req.body.isAdmin = true;
 
     const token = jwt.sign(
       {
@@ -51,19 +61,36 @@ exports.signin = async (req, res) => {
 exports.allAdminPrivs = (req, res) => {
   if (req.body.isAdmin) {
     const ALL_PRIVS_DBA = {
-      SYS_PRIVS: ['CREATE PROFILE', 'ALTER PROFILE', 'DROP PROFILE', 'CREATE ROLE',
-        'ALTER ANY ROLE', 'DROP ANY ROLE', 'GRANT ANY ROLE', 'CREATE SESSION', 'SELECT ANY TABLE',
-        'CREATE USER', 'ALTER USER', 'DROP USER', 'CREATE ANY TABLE', 'ALTER ANY TABLE', 'DROP ANY TABLE',
-        'DELETE ANY TABLE', 'INSERT ANY TABLE', 'UPDATE ANY TABLE', 'CREATE TABLE'],
+      SYS_PRIVS: [
+        "CREATE PROFILE",
+        "ALTER PROFILE",
+        "DROP PROFILE",
+        "CREATE ROLE",
+        "ALTER ANY ROLE",
+        "DROP ANY ROLE",
+        "GRANT ANY ROLE",
+        "CREATE SESSION",
+        "SELECT ANY TABLE",
+        "CREATE USER",
+        "ALTER USER",
+        "DROP USER",
+        "CREATE ANY TABLE",
+        "ALTER ANY TABLE",
+        "DROP ANY TABLE",
+        "DELETE ANY TABLE",
+        "INSERT ANY TABLE",
+        "UPDATE ANY TABLE",
+        "CREATE TABLE",
+      ],
 
       // CHECK_PRIVS: ['CREATE PROFILE', 'ALTER PROFILE', 'DROP PROFILE', 'CREATE ROLE',
       //     'ALTER ANY ROLE', 'DROP ANY ROLE', 'GRANT ANY ROLE', 'CREATE SESSION', 'SELECT ANY TABLE',
       //     'CREATE USER', 'ALTER USER', 'DROP USER', 'SELECT'],
 
-      OBJECT_PRIVS: ['SELECT', 'INSERT', 'DELETE'],
+      OBJECT_PRIVS: ["SELECT", "INSERT", "DELETE"],
 
-      COL_PRIVS: ['UPDATE', 'INSERT'],
-    }
+      COL_PRIVS: ["UPDATE", "INSERT"],
+    };
     return Get(res, { ALL_PRIVS_DBA });
   }
   return Unauthorized(res);

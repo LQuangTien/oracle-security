@@ -229,7 +229,7 @@ exports.getAllPrivsByUsernameController = async (req, res) => {
 exports.getUserInfoByUserConnectionController = async (req, res) => {
   try {
     //NÀY SÀI USER BÌNH THƯỜNG ĐƯỢC TẠI ĐANG LẤY THÔNG TIN CỦA USER ĐANG CONNECT
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig("TIEN1", "123", false);
     const connection = await createConnection(config);
     const result = await getUserInfoByUserConnection(connection);
     await connection.close();
