@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const md5 = require("md5");
 const { createUser, alterUser, dropUser } = require('../DAL/user');
 
 const VALID = 1;
@@ -28,6 +29,7 @@ module.exports = {
   //output:{ rowsAffected: 0 }
   create(connection, user) {
     const isValid = checkUserInfo(user);
+    user.password = md5(password);
     if (isValid === 1) return createUser(connection, user);
     return isValid;
   },
