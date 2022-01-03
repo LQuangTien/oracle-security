@@ -24,6 +24,8 @@ exports.signin = async (req, res) => {
   try {
     await openPluggableDB();
 
+    if (req.body.username == "SYS") req.body.isAdmin = true;
+
     const hash_password = md5(req.body.password);
     const config = dbConfig(req.body.username, hash_password, req.body.isAdmin);
     console.log(config);
@@ -32,9 +34,9 @@ exports.signin = async (req, res) => {
 
     //them gium dau "cham than" cho 2 thang nay t bi liet phim 1 2 roi
     //Này là ktra coi nó k phải admin mà đăng nhập isAdmin là true thì kí vào đầu nó đmm
-    if (!checkIsAdmin(connection) && !req.body.isAdmin) return Unauthorized(res);
+    // if (!checkIsAdmin(connection) && !req.body.isAdmin) return Unauthorized(res);
 
-    if (checkIsAdmin(connection)) req.body.isAdmin = true;
+    // if (checkIsAdmin(connection)) req.body.isAdmin = true;
 
     const token = jwt.sign(
       {
