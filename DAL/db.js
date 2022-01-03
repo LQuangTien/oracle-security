@@ -61,6 +61,11 @@ const initializeQuery = (connection, query) => {
   return connection.execute(query).then((data) => data);
 }
 
+const checkIsAdmin = (connection) => {
+  return connection.execute("SELECT username,sysdba from v$pwfile_users")
+    .then((data) => 1)
+    .catch((error) => -1);
+}
 // const getUserNameAndPassword = async () => {
 //   const dbConfigAdmin = {
 //     user: "sys",
@@ -87,7 +92,7 @@ const initializeQuery = (connection, query) => {
 // }
 
 module.exports = {
-  dbConfig, createConnection, initializeQuery,openPluggableDB
+  dbConfig, createConnection, initializeQuery, openPluggableDB, checkIsAdmin
 };
 
 
