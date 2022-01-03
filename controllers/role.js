@@ -57,7 +57,7 @@ exports.grantRolesOrSysPrivsController = async (req, res) => {
     try {
         const config = dbConfig("sys", "123", true);
         const connection = await createConnection(config);
-        const result = await grantRolesOrSysPrivs(connection, req.grantInfo);
+        const result = await grantRolesOrSysPrivs(connection, req.body.grantInfo);
         await connection.close();
 
         return Get(res, result);

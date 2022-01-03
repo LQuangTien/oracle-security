@@ -49,8 +49,9 @@ const openPluggableDB = () => {
   });
 }
 
-const createConnection = (dbConfig) => {
-  return oracledb.getConnection(dbConfig);
+const createConnection = async (dbConfig) => {
+  const result = await oracledb.getConnection(dbConfig);
+  return result;
 }
 
 const initializeQuery = (connection, query) => {

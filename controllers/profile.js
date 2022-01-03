@@ -15,7 +15,8 @@ exports.createProfile = async (req, res) => {
     //lẽ ra là có req.username,req.password,req.isAdmin từ middleware
     //user,pwd,isAdmin
     //này user nào có quyền thì cx dùng dc hết
-    const config = dbConfig("sys", "123", true);
+    console.log(req.user.username);
+    const config = dbConfig(req.user.username, req.user.password, false);
     const connection = await createConnection(config);
     const result = await create(connection, req.body);
     await connection.close();

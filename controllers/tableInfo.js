@@ -31,7 +31,7 @@ exports.getAllPrivilegesController = async (req, res) => {
     const result = await getAllPrivileges(connection);
     await connection.close();
 
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -207,7 +207,7 @@ exports.getAllRolesByUsernameController = async (req, res) => {
     const result = await getAllRolesByUsername(connection, req.params.username);
     await connection.close();
 
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -220,7 +220,7 @@ exports.getAllPrivsByUsernameController = async (req, res) => {
     const result = await getAllPrivsByUsername(connection, req.params.username);
     await connection.close();
 
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -234,7 +234,7 @@ exports.getUserInfoByUserConnectionController = async (req, res) => {
     const result = await getUserInfoByUserConnection(connection);
     await connection.close();
 
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
