@@ -1,4 +1,13 @@
 const { dbConfig, createConnection, initializeQuery } = require("./db");
+/*
+`
+DECLARE
+  hash_password VARCHAR2(300);
+BEGIN
+  SELECT standard_hash('123', 'MD5') INTO hash_password FROM dual;
+EXECUTE IMMEDIATE 'create user tien123 identified by '|| hash_password ;
+END;
+` */
 
 const createUser = (connection, user) => {
   let createUserQuery =

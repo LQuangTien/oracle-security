@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const md5 = require("md5");
-const { createUser, alterUser, dropUser } = require('../DAL/user');
+const { createUser, alterUser, dropUser } = require("../DAL/user");
 
 const VALID = 1;
 //const QUOTA_INVALID = 'QUOTA is not a number';
@@ -9,7 +9,6 @@ const STATUS_INVALID = "STATE must be LOCK or UNLOCK";
 function checkUserInfo(user) {
   const stateLock = "LOCK";
   const stateUnlock = "UNLOCK";
-  console.log(user);
   if (user.state) {
     if (
       !(
@@ -29,7 +28,6 @@ module.exports = {
   //output:{ rowsAffected: 0 }
   create(connection, user) {
     const isValid = checkUserInfo(user);
-    user.password = md5(password);
     if (isValid === 1) return createUser(connection, user);
     return isValid;
   },

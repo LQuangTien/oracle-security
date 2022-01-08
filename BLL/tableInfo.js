@@ -411,6 +411,7 @@ module.exports = {
     ]);
 
     user.userInfo = userinfo.rows[0];
+    console.log(userinfo);
     user.roles = allRoles.rows;
 
     user.privs = allPrivs.privs;

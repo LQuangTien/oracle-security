@@ -39,7 +39,11 @@ exports.getAllPrivilegesController = async (req, res) => {
 
 exports.getAllRoleController = async (req, res) => {
   try {
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await getAllRole(connection);
     await connection.close();
@@ -50,27 +54,31 @@ exports.getAllRoleController = async (req, res) => {
   }
 };
 
+// exports.getAllPrivsByRoleController = async (req, res) => {
+//   try {
+//     const config = dbConfig("sys", "123", true);
+//     const connection = await createConnection(config);
+//     const result = await getAllPrivsByRole(connection, req.params.roleName);
+//     await connection.close();
+
+//     return Get(res, { result });
+//   } catch (error) {
+//     return ServerError(res, error.message);
+//   }
+// };
+
 exports.getAllPrivsByRoleController = async (req, res) => {
   try {
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await getAllPrivsByRole(connection, req.params.roleName);
     await connection.close();
 
-    return Get(res, result);
-  } catch (error) {
-    return ServerError(res, error.message);
-  }
-};
-
-exports.getAllPrivsByRoleController = async (req, res) => {
-  try {
-    const config = dbConfig("sys", "123", true);
-    const connection = await createConnection(config);
-    const result = await getAllPrivsByRole(connection, req.params.roleName);
-    await connection.close();
-
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -83,7 +91,7 @@ exports.getAllUsersByRoleController = async (req, res) => {
     const result = await getAllUsersByRole(connection, req.params.roleName);
     await connection.close();
 
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -168,7 +176,7 @@ exports.getAllUsersByProfileController = async (req, res) => {
     );
     await connection.close();
 
-    return Get(res, result);
+    return Get(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -229,7 +237,12 @@ exports.getAllPrivsByUsernameController = async (req, res) => {
 exports.getUserInfoByUserConnectionController = async (req, res) => {
   try {
     //NÀY SÀI USER BÌNH THƯỜNG ĐƯỢC TẠI ĐANG LẤY THÔNG TIN CỦA USER ĐANG CONNECT
-    const config = dbConfig("TIEN1", "123", false);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
+    // const config = dbConfig("TIEN3", "123", false);
     const connection = await createConnection(config);
     const result = await getUserInfoByUserConnection(connection);
     await connection.close();

@@ -1,27 +1,27 @@
-const { dbConfig, createConnection, initializeQuery } = require('./db');
-
+const { dbConfig, createConnection, initializeQuery } = require("./db");
 
 const createRole = (connection, role) => {
-    let createRoleQuery = ' CREATE ROLE ' + role.name;;
-    if (role.password) createRoleQuery += ' IDENTIFIED BY ' + role.password;;
+  let createRoleQuery = " CREATE ROLE " + role.name;
+  if (role.password) createRoleQuery += " IDENTIFIED BY " + role.password;
 
-    return initializeQuery(connection, createRoleQuery);
-}
+  return initializeQuery(connection, createRoleQuery);
+};
 
 const alterRole = (connection, role) => {
-    const alterRoleQuery = ' ALTER ROLE ' + role.name + ' IDENTIFIED BY ' + role.password;
+  const alterRoleQuery =
+    " ALTER ROLE " + role.name + " IDENTIFIED BY " + role.password;
 
-    return initializeQuery(connection, alterRoleQuery);
-}
+  return initializeQuery(connection, alterRoleQuery);
+};
 
 const dropRole = (connection, roleName) => {
-    const dropRoleQuery = 'DROP ROLE ' + roleName;
+  const dropRoleQuery = "DROP ROLE " + roleName;
 
-    return initializeQuery(connection, dropRoleQuery);
-}
+  return initializeQuery(connection, dropRoleQuery);
+};
 
 //GRANT new_dba TO michael WITH ADMIN OPTION;
-//Object privileges cannot be granted along with system privileges and roles 
+//Object privileges cannot be granted along with system privileges and roles
 //in the same GRANT statement.
 //GRANT SELECT ON hr.employees TO blake WITH GRANT OPTION;
 
@@ -30,35 +30,45 @@ const dropRole = (connection, roleName) => {
 
 //chi grant sys privs vs role cung nhau duoc thoi, object privs phai grant rieng
 const grantRolesOrSysPrivsTo = (connection, params) => {
-    let grantRolesOrSysPrivsToQuery = 'GRANT ' + params.rolesOrSysPrivs.join(',') + ' TO '
-        + params.grantee;
-    if (params.grantable) grantRolesOrSysPrivsToQuery += ' WITH ADMIN OPTION ';
+  let grantRolesOrSysPrivsToQuery =
+    "GRANT " + params.rolesOrSysPrivs.join(",") + " TO " + params.grantee;
+  if (params.grantable) grantRolesOrSysPrivsToQuery += " WITH ADMIN OPTION ";
 
-    return initializeQuery(connection, grantRolesOrSysPrivsToQuery);
-}
+  return initializeQuery(connection, grantRolesOrSysPrivsToQuery);
+};
 
 //chi co the grant col vs tab tren cung table trong 1 cau grant
 const grantTabOrColPrivsTo = (connection, params) => {
-    let grantTabOrColPrivsToQuery = 'GRANT ' + params.tabOrColPrivs.join(',') + ' ON '
-        + params.table + ' TO ' + params.grantee;;
-    if (params.grantable) grantTabOrColPrivsToQuery += ' WITH GRANT OPTION ';
-console.log(grantTabOrColPrivsToQuery );
-    return initializeQuery(connection, grantTabOrColPrivsToQuery);
-}
+  let grantTabOrColPrivsToQuery =
+    "GRANT " +
+    params.rolesOrSysPrivs.join(",") +
+    " ON " +
+    params.table +
+    " TO " +
+    params.grantee;
+  if (params.grantable) grantTabOrColPrivsToQuery += " WITH GRANT OPTION ";
+  console.log(grantTabOrColPrivsToQuery);
+  return initializeQuery(connection, grantTabOrColPrivsToQuery);
+};
 
 const revokeRolesOrSysPrivsFrom = (connection, params) => {
-    const revokeRolesOrPrivsFromQuery = 'REVOKE ' + params.rolesOrSysPrivs.join(',') + ' FROM '
-        + params.grantee;
+  const revokeRolesOrPrivsFromQuery =
+    "REVOKE " + params.rolesOrSysPrivs.join(",") + " FROM " + params.grantee;
 
-    return initializeQuery(connection, revokeRolesOrPrivsFromQuery);
-}
+  return initializeQuery(connection, revokeRolesOrPrivsFromQuery);
+};
 
 const revokeTabOrColPrivsFrom = (connection, params) => {
-    const revokeTabOrColPrivsFromQuery = 'REVOKE ' + params.tabOrColPrivs.join(',') + ' ON '
-        + params.table + ' FROM ' + params.grantee;
+  const revokeTabOrColPrivsFromQuery =
+    "REVOKE " +
+    params.rolesOrSysPrivs.join(",") +
+    " ON " +
+    params.table +
+    " FROM " +
+    params.grantee;
 
-    return initializeQuery(connection, revokeTabOrColPrivsFromQuery);
-}
+  return initializeQuery(connection, revokeTabOrColPrivsFromQuery);
+};
 
 /*
 (async function exec() {
@@ -78,6 +88,11 @@ const revokeTabOrColPrivsFrom = (connection, params) => {
 */
 
 module.exports = {
-    createRole, alterRole, dropRole, grantRolesOrSysPrivsTo, grantTabOrColPrivsTo,
-    revokeRolesOrSysPrivsFrom, revokeTabOrColPrivsFrom
-}
+  createRole,
+  alterRole,
+  dropRole,
+  grantRolesOrSysPrivsTo,
+  grantTabOrColPrivsTo,
+  revokeRolesOrSysPrivsFrom,
+  revokeTabOrColPrivsFrom,
+};

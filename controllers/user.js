@@ -15,7 +15,11 @@ exports.createUser = async (req, res) => {
     //lẽ ra là có req.username,req.password,req.isAdmin từ middleware
     //user,pwd,isAdmin
     //này user nào có quyền thì cx dùng dc hết
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await create(connection, req.body);
     await connection.close();
@@ -28,12 +32,16 @@ exports.createUser = async (req, res) => {
 
 exports.alterUser = async (req, res) => {
   try {
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await alter(connection, req.body);
     await connection.close();
 
-    return Update(res, {result});
+    return Update(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -41,12 +49,16 @@ exports.alterUser = async (req, res) => {
 
 exports.dropUser = async (req, res) => {
   try {
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await drop(connection, req.params.username);
     await connection.close();
 
-    return Delete(res, {result});
+    return Delete(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }

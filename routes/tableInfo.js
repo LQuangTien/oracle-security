@@ -15,18 +15,23 @@ const {
   getAllPrivsByUsernameController,
   getUserInfoByUserConnectionController,
 } = require("../controllers/tableInfo");
+const { requireSignin, isAdmin } = require("../middlewares");
 
 const router = express.Router();
 
 router.get("/tableInfo/getAllPrivileges", getAllPrivilegesController);
 
-router.get("/tableInfo/getAllRole", getAllRoleController);
+router.get("/tableInfo/getAllRole", requireSignin, getAllRoleController);
 router.get(
   "/tableInfo/getAllPrivsByRole/:roleName",
+  requireSignin,
+  isAdmin,
   getAllPrivsByRoleController
 );
 router.get(
   "/tableInfo/getAllUsersByRole/:roleName",
+  requireSignin,
+  isAdmin,
   getAllUsersByRoleController
 );
 
@@ -53,6 +58,7 @@ router.get(
 
 router.get(
   "/tableInfo/getUserInfoByUserConnection",
+  requireSignin,
   getUserInfoByUserConnectionController
 );
 

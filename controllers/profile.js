@@ -16,7 +16,11 @@ exports.createProfile = async (req, res) => {
     //user,pwd,isAdmin
     //này user nào có quyền thì cx dùng dc hết
     console.log(req.user.username);
-    const config = dbConfig(req.user.username, req.user.password, false);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await create(connection, req.body);
     await connection.close();
@@ -29,12 +33,16 @@ exports.createProfile = async (req, res) => {
 
 exports.alterProfile = async (req, res) => {
   try {
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await alter(connection, req.body);
     await connection.close();
 
-    return Update(res, {result});
+    return Update(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }
@@ -42,12 +50,16 @@ exports.alterProfile = async (req, res) => {
 
 exports.dropProfile = async (req, res) => {
   try {
-    const config = dbConfig("sys", "123", true);
+    const config = dbConfig(
+      req.user.username,
+      req.user.password,
+      req.user.isAdmin
+    );
     const connection = await createConnection(config);
     const result = await drop(connection, req.params.profileName);
     await connection.close();
 
-    return Delete(res, {result});
+    return Delete(res, { result });
   } catch (error) {
     return ServerError(res, error.message);
   }

@@ -11,7 +11,7 @@ const { requireSignin } = require("../middlewares");
 const router = express.Router();
 
 router.post("/profile/create", requireSignin, createProfile);
-router.delete("/profile/:profileName", dropProfile);
-router.put("/profile/", alterProfile);
+router.delete("/profile/:profileName",requireSignin, dropProfile);
+router.put("/profile/",requireSignin, alterProfile);
 
 module.exports = router;
