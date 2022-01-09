@@ -35,10 +35,22 @@ router.get(
   getAllUsersByRoleController
 );
 
-router.get("/tableInfo/getAllProfiles", getAllProfilesController);
-router.get("/tableInfo/getProfileInfo/:profileName", getProfileInfoController);
+router.get(
+  "/tableInfo/getAllProfiles",
+  requireSignin,
+  isAdmin,
+  getAllProfilesController
+);
+router.get(
+  "/tableInfo/getProfileInfo/:profileName",
+  requireSignin,
+  isAdmin,
+  getProfileInfoController
+);
 router.get(
   "/tableInfo/getAllUsersByProfile/:profileName",
+  requireSignin,
+  isAdmin,
   getAllUsersByProfileController
 );
 
