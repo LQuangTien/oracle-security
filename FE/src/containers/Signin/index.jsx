@@ -30,8 +30,8 @@ function Signin(props) {
         {auth.error && <p style={{ color: "red" }}>Error: {auth.error}</p>}
 
         <Input
-          label="Email"
-          placeholder="Email"
+          label="Username"
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />

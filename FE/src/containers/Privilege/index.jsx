@@ -20,9 +20,10 @@ function Privilege(props) {
   const { privileges, adminPrivs, userByPriv } = useSelector(
     (state) => state.privilege
   );
-  const { isGranting, isRevoking } = useSelector((state) => state.role);
+  const { isGranting, isRevoking, error } = useSelector((state) => state.role);
   const [withAdminOption, setWithAdminOption] = useState(false);
   const [screen, setScreen] = useState("priv");
+  const [column, setColumn] = useState("");
 
   /** ADMIN GRANT PRIV  */
   const [grant, setGrant] = useState("priv");
@@ -177,6 +178,26 @@ function Privilege(props) {
     dispatch(
       revokeTable({
         rolesOrSysPrivs: adminPrivCheck,
+        grantee,
+        table,
+      })
+    );
+  };
+  const handleAdminGrantCol = () => {
+    dispatch(
+      grantTable({
+        rolesOrSysPrivs: adminPrivCheck.map((priv) => `${priv}(${column})`),
+        grantee,
+        grantable: withAdminOption,
+        table,
+      })
+    );
+  };
+
+  const handleAdminRevokeCol = () => {
+    dispatch(
+      revokeTable({
+        rolesOrSysPrivs: adminPrivCheck.map((priv) => `${priv}(${column})`),
         grantee,
         table,
       })
@@ -358,7 +379,7 @@ function Privilege(props) {
           className="mr-2"
         />
         <input
-          placeholder="Table"
+          placeholder="HR.JOBS"
           value={table}
           onChange={(e) => setTable(e.target.value)}
         />
@@ -424,6 +445,88 @@ function Privilege(props) {
       </div>
     );
   };
+  const renderAdminGrantCol = () => {
+    return (
+      <div>
+        <input
+          placeholder="User"
+          value={grantee}
+          onChange={(e) => setGrantee(e.target.value)}
+          className="mr-2"
+        />
+        <input
+          placeholder="HR.JOBS"
+          value={table}
+          className="mr-2"
+          onChange={(e) => setTable(e.target.value)}
+        />
+        <input
+          placeholder="COLUMN"
+          value={column}
+          onChange={(e) => setColumn(e.target.value)}
+        />
+        <div className="d-inline-block ml-3 mr-1">
+          <input
+            type="checkbox"
+            id={"withadminoption"}
+            defaultChecked={withAdminOption}
+            onChange={() => setWithAdminOption(!withAdminOption)}
+            className="mr-1"
+          />
+          <label htmlFor={"withadminoption"}>WITH ADMIN OPTION</label>
+        </div>
+        <div className="d-inline-block ml-3 mr-1">
+          <Button
+            onClick={handleAdminGrantCol}
+            disabled={isGranting || isRevoking}
+          >
+            {isGranting && (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            )}{" "}
+            GRANT
+          </Button>
+        </div>
+        <div className="d-inline-block ml-3 mr-1">
+          <Button
+            className="btn-warning"
+            onClick={handleAdminRevokeCol}
+            disabled={isGranting || isRevoking}
+          >
+            {isRevoking && (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            )}{" "}
+            REVOKE
+          </Button>
+        </div>
+        <div>
+          {["INSERT", "UPDATE"].map((priv) => (
+            <div key={priv} className="d-inline-block mr-2">
+              <input
+                type="checkbox"
+                id={priv}
+                checked={adminPrivCheck.includes(priv)}
+                onChange={() => handleAdminPrivCheck(priv)}
+                className="mr-1"
+              />
+              <label htmlFor={priv}>{priv}</label>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
   return (
     <div>
       <Container>
@@ -453,11 +556,20 @@ function Privilege(props) {
               </Button>
               <Button
                 variant="primary"
+                className="mr-2"
                 onClick={() =>
                   setGrant((prev) => (prev === "table" ? "" : "table"))
                 }
               >
                 Grant Privileges On Table
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  setGrant((prev) => (prev === "column" ? "" : "column"))
+                }
+              >
+                Grant Privileges On Column
               </Button>
             </div>
           </Col>
@@ -466,6 +578,13 @@ function Privilege(props) {
           {user && user.isAdmin && grant === "priv" && renderAdminGrantRole()}
           {user && !user.isAdmin && grant === "priv" && renderUserGrantRole()}
           {user && grant === "table" && renderAdminGrantTable()}
+          {user && grant === "column" && renderAdminGrantCol()}
+
+          {error && (
+            <div className="w-100 ">
+              <p className="errorMessage">{error}</p>
+            </div>
+          )}
           {screen === "priv" && <Col md={12}>{renderProfilesTable()}</Col>}
           {screen === "user" && <Col md={12}>{renderGetUserByPrivTable()}</Col>}
         </Row>

@@ -61,7 +61,7 @@ function AddUser(props) {
             <Form.Control
               className="form__input w-100"
               {...register(`defaultTablespace`)}
-              placeholder="Default Tablespace"
+              placeholder="USERS"
             />
           </div>
           <div>
@@ -69,7 +69,7 @@ function AddUser(props) {
             <Form.Control
               className="form__input w-100"
               {...register(`quota`)}
-              placeholder="Quota"
+              placeholder="DEFAULT"
             />
           </div>
           <div>
@@ -79,7 +79,7 @@ function AddUser(props) {
             <Form.Control
               className="form__input w-100"
               {...register(`tempTablespace`)}
-              placeholder="Temp Tablespace"
+              placeholder="TEMP"
             />
           </div>
           <div>
@@ -87,9 +87,32 @@ function AddUser(props) {
             <Form.Control
               className="form__input w-100"
               {...register(`profile`)}
-              placeholder="Profile"
+              placeholder="DEFAULT"
             />
           </div>
+          <div className="mt-2">
+            <Form.Label className="form__title d-inline-block mr-2">
+              <input
+                {...register("state")}
+                type="radio"
+                name="state"
+                value="LOCK"
+                className="mr-2"
+              />
+              LOCK
+            </Form.Label>
+            <Form.Label className="form__title d-inline-block">
+              <input
+                {...register("state")}
+                type="radio"
+                name="state"
+                value="UNLOCK"
+                className="mr-2"
+              />
+              UNLOCK
+            </Form.Label>
+          </div>
+
           <button
             type="submit"
             className="btn btn-success w-25 mt-3"

@@ -60,9 +60,10 @@ function EditRole() {
   };
 
   const handleDrop = () => {
-    dispatch(dropRole(roleName)).then(() => {
-      history.push("/roles");
-    });
+    dispatch(dropRole(roleName));
+    // .then(() => {
+    //   history.push("/roles");
+    // });
   };
 
   const allPrivByRoleColumns = ["#", "PRIVILEGE", "GRANTABLE"];
